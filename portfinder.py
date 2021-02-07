@@ -5,9 +5,10 @@ stringsFormat = '%-30s\t%-30s\t%-10s\t%-30s\t%-10s\n'
 strings = stringsFormat % ('process', 'local ip', 'local port', 'remote ip', 'remote port')
 strings += '-'*30+'\t'+'-'*30+'\t'+'-'*10+'\t'+'-'*30+'\t'+'-'*10+'\n'
 
+personalPort = {}
+for i in range(50000, 65536):
+        personalPort[i] = True
 
-personalPort = [i for i in range(49152, 65536)]
-usedPort = []
 
 localip = ''
 localport = ''
@@ -45,18 +46,30 @@ def sample():
 def main():
 
 
-        for con in psutil.net_connections():
+        for conn in psutil.net_connections():
                 if conn.status == 'NONE':
                         pass
+                else:
+                        localport = int(conn.laddr[1])
+                        personalPort[localport] = False
 
-        return
+
+        print("[*] Using Port : ", end='')
+        for i in personalPort:
+                if personalPort[i] == True:
+                        return i
+
+
+
+        return 
 
 
 if __name__ == '__main__':
-        sample()
+        main()
 
 
 # https://psutil.readthedocs.io/en/latest/
+# https://blog.itanoss.kr/ko/python%EC%9C%BC%EB%A1%9C-docker-%EC%BB%A8%ED%8A%B8%EB%A1%A4%ED%95%98%EA%B8%B0/
 
 
 
