@@ -5,10 +5,6 @@ stringsFormat = '%-30s\t%-30s\t%-10s\t%-30s\t%-10s\n'
 strings = stringsFormat % ('process', 'local ip', 'local port', 'remote ip', 'remote port')
 strings += '-'*30+'\t'+'-'*30+'\t'+'-'*10+'\t'+'-'*30+'\t'+'-'*10+'\n'
 
-personalPort = {}
-for i in range(50000, 65536):
-        personalPort[i] = True
-
 
 localip = ''
 localport = ''
@@ -43,7 +39,12 @@ def sample():
 
         return
 
-def main():
+def findUsablePort():
+
+
+        usablePort = {}
+        for i in range(50000, 65536):
+                usablePort[i] = True
 
 
         for conn in psutil.net_connections():
@@ -57,11 +58,17 @@ def main():
         print("[*] Using Port : ", end='')
         for i in personalPort:
                 if personalPort[i] == True:
+                        
+                        print(str(i))
+                        
                         return i
 
 
+        return -1
 
-        return 
+def main():
+
+
 
 
 if __name__ == '__main__':
