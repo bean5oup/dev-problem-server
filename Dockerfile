@@ -1,16 +1,9 @@
-FROM ubuntu:18.04
-MAINTAINER Wimes <dev.wimes@gmail.com>
+FROM python:3.8-slim
 
-# Avoiding user interaction with tzdata
-ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update
-RUN apt-get install -y apache2 # install Apache web server (Only 'yes')
-RUN apt-get install -y software-properties-common # php 5.6(이전버전) 설치를 위해
-RUN add-apt-repository ppa:ondrej/php # For Installing PHP 5.6
-RUN apt-get update
-RUN apt-get install -y php5.6
 
-EXPOSE 8080
 
-CMD ["apachectl", "-D", "FOREGROUND"]
+
+EXPOSE 80
+
+
