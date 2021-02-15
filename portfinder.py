@@ -11,9 +11,13 @@ localport = ''
 remoteip = ''
 remoteport = ''
 
+
 def processinfo(conn):
+
         process = psutil.Process(conn.pid)
+
         return process.name()
+
 
 def sample():
 
@@ -38,6 +42,7 @@ def sample():
         print(strings)
 
         return
+
 
 def findUsablePort():
 
@@ -65,15 +70,6 @@ def findUsablePort():
 
 
         return -1
-
-def main():
-
-
-
-
-if __name__ == '__main__':
-        main()
-
 
 # https://psutil.readthedocs.io/en/latest/
 # https://blog.itanoss.kr/ko/python%EC%9C%BC%EB%A1%9C-docker-%EC%BB%A8%ED%8A%B8%EB%A1%A4%ED%95%98%EA%B8%B0/
