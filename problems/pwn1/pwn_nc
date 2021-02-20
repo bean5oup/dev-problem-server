@@ -7,6 +7,6 @@ service pwn_nc
     socket_type = stream
     protocol    = tcp
     user        = bean3oup
-    port        = 12370
+    port        = 8080
     flags       = REUSE
 }

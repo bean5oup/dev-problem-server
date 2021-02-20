@@ -2,7 +2,7 @@ FROM python:3.8
 
 # ENV
 ENV user bean3oup
-ENV port 8000
+ENV port 8080
 
 # SET packages
 RUN apt-get update -y

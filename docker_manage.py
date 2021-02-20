@@ -1,12 +1,21 @@
 import docker
-import os
+import subprocess
 
 client = docker.from_env()
 
+problems = subprocess.check_output(['ls ./problems'], shell=True).decode().split('\n')
+problems.remove('')
+
 def build_images():	
 
-	for problem in os.listdir('./problems'):
-		client.images.build(path=f'./problems/{problem}', tag=f'{problem}', rm=True)	
+	if 'docker-compose.yml' in problems:
+		print('build using docker-compose.yml')
+		subprocess.run(['docker-compose up -d'], shell=True, cwd="./problems")
+		subprocess.run(['docker-compose down'], shell=True, cwd="./problems")
+	
+	else:	
+		for problem in problems:
+			client.images.build(path=f'./problems/{problem}', tag=f'{problem}', rm=True)	
 
 	for image in client.images.list():
 		if image.tags == []:
@@ -15,14 +24,14 @@ def build_images():
 
 def run_container(user_token, problem, port):
 	
-	client.containers.run(problem, detach=True, name=user_token, ports={'12370/tcp':port}, remove=True)
+	client.containers.run(problem, detach=True, name=user_token, ports={'8080/tcp':port}, remove=True)
 
 
 def stop_container(user_token):
 	
 	for container in client.containers.list():
 		if container.name == user_token:
-			container.stop(timeout=100)
+			container.stop()
 
 
 def remove_container(user_token):
@@ -35,9 +44,10 @@ def remove_container(user_token):
 #======test=======
 #build_images()
 #run_container(111, "pwn1", 12370)
-#run_container(222, "web1", 12371)
+#run_container(222, "pwn1", 12371)
+#run_container(333, "web1", 12372)
 
 #stop_container('111')
 #stop_container('222')
-
+#stop_container('333')
 
