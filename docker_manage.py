@@ -10,8 +10,7 @@ def build_images():
 
 	if 'docker-compose.yml' in problems:
 		print('build using docker-compose.yml')
-		subprocess.run(['docker-compose up -d'], shell=True, cwd="./problems")
-		subprocess.run(['docker-compose down'], shell=True, cwd="./problems")
+		subprocess.run(['docker-compose build'], shell=True, cwd="./problems")
 	
 	else:	
 		for problem in problems:
