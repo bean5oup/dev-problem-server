@@ -3,29 +3,39 @@ import portfinder
 import threading
 
 
-class server:
+class problem_socket:
 
-    def __init__(self, sock=None, host="127.0.0.1", port=None, max, file):
-        if sock is None:
-            self.sock = socket.socket(
-                            socket.AF_INET, socket.SOCK_STREAM)
-        else:
-            self.sock = sock
-
-        self.sock.stsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
+    def __init__(self, max=0, file='', host="localhost", port=None):
+        
 
         if port is None:
-        	print("[-] None port error : (server, __init__)")
+        	print("[-] None port error : (problem_socket, __init__)")
         	return -1
+
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.receive_request = ''
+        self.send_request = ''
+        self.host = host
+        self.port = port
+        self.max = max
+        self.file = file
+
+        print("[+] sock binding")
+
 
         self.sock.bind((host, port))
 
     def waiting(self):
 
+    	if self.sock == None:
+    		print("[-] None sock error : (problem_socket, waiting)")
+    		return -1
+
+    	self.sock.listen(self.max)
+
     	while True:
     		try:
-
+    			print("[*] Waiting for client")
     			client_socket, addr = self.sock.accept()
 
     		except KeyboardInterrupt:
@@ -53,6 +63,7 @@ class server:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
 
+
     def myreceive(self):
         chunks = []
         bytes_recd = 0
@@ -66,6 +77,10 @@ class server:
 
 
     def receiveRequest(client_socket, addr):
+
+    	print("[*] receiveRequest")
+    	print("[*] client_socket : {}".format(client_socket))
+    	print("[*] addr : {}".format(addr))
 
 
 

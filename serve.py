@@ -12,15 +12,15 @@ args = parser.parse_args()
 if os.path.relpath(args.file):
 
 
-	print("[+] port : {}".format(args.port))
-	print("[+] max : {}".format(args.max))
-	print("[+] file : {}".format(args.file))
+	print("[*] port : {}".format(args.port))
+	print("[*] max : {}".format(args.max))
+	print("[*] file : {}".format(args.file))
 	
 
 	from problem_server import *
 
-	problem_server = server()
-	
+	server_socket = problem_socket(port=int(args.port), max=int(args.max), file=args.file)
+	server_socket.waiting()
 
 else:	
 	print("[-] Not exist docker file : {}".format(args.file))
