@@ -24,6 +24,17 @@ class problem_socket:
 
 
         self.sock.bind((host, port))
+    
+    def receiveRequest(self, client_socket, addr):
+
+    	print("[*] receiveRequest")
+    	print("[*] client_socket : {}".format(client_socket))
+    	print("[*] addr : {}".format(addr))
+    	chunk = self.sock.recv(2048)
+    	print("[*} msg : {}".format(msg))
+
+
+    	return
 
     def waiting(self):
 
@@ -45,7 +56,7 @@ class problem_socket:
 
     		print("[+] Receive request")
 
-    		t = threading.Thread(target=receiveRequest, args=(client_socket,addr))
+    		t = threading.Thread(target=problem_socket.receiveRequest, args=(self, client_socket, addr))
     		t.daemon = True
     		t.start()
 
@@ -57,12 +68,10 @@ class problem_socket:
 
     def mysend(self, msg):
         totalsent = 0
-        while totalsent < MSGLEN:
-            sent = self.sock.send(msg[totalsent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
-
+        sent = self.sock.send(msg)
+        if sent == 0:
+            raise RuntimeError("socket connection broken")
+        
 
     def myreceive(self):
         chunks = []
@@ -75,13 +84,8 @@ class problem_socket:
             bytes_recd = bytes_recd + len(chunk)
         return b''.join(chunks)
 
-
-    def receiveRequest(client_socket, addr):
-
-    	print("[*] receiveRequest")
-    	print("[*] client_socket : {}".format(client_socket))
-    	print("[*] addr : {}".format(addr))
-
-
+    def __del__(self):
+    	if self.sock != None:
+    		self.sock.close()
 
     	return
