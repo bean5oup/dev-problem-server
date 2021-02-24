@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+
+  pwn1:
+    image: pwn1
+    build: ./pwn1
+  
+  web1:
+    image: web1
+    build: ./web1
+
