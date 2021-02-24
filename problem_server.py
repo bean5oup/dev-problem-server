@@ -1,7 +1,8 @@
 import socket
 import portfinder
 import threading
-
+import docker_manage
+import portfinder
 
 class problem_socket:
 
@@ -30,10 +31,20 @@ class problem_socket:
     	print("[*] receiveRequest")
     	print("[*] client_socket : {}".format(client_socket))
     	print("[*] addr : {}".format(addr))
-    	msg = client_socket.recv(2048)
-    	print("[*] msg : {}".format(msg.decode('latin-1')))
+    	msg = client_socket.recv(2048).decode('latin-1')
+    	print("[*] msg : {}".format(msg))
+    	
+
+    	usertoken = msg.split(':')[0]
+    	problem_name = msg.split(':')[1]
+    	request_type = msg.split(':')[2]
+
+    	print("[*] usertoken : {}".format(usertoken))
+    	print("[*] problem_name : {}".format(problem_name))
+    	print("[*] request_type : {}".format(request_type))
 
     	client_socket.close()
+
     	return
 
     def waiting(self):
