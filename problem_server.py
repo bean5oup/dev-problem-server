@@ -30,10 +30,10 @@ class problem_socket:
     	print("[*] receiveRequest")
     	print("[*] client_socket : {}".format(client_socket))
     	print("[*] addr : {}".format(addr))
-    	chunk = self.sock.recv(2048)
-    	print("[*} msg : {}".format(msg))
+    	msg = client_socket.recv(2048)
+    	print("[*] msg : {}".format(msg.decode('latin-1')))
 
-
+    	client_socket.close()
     	return
 
     def waiting(self):
