@@ -1,7 +1,5 @@
 import docker
 import subprocess
-from enum import Enum
-
 
 
 client = docker.from_env()

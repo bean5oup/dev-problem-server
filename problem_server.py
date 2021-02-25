@@ -3,8 +3,15 @@ import portfinder
 import threading
 import docker_manage
 import portfinder
+from enum import Enum
+
+class problem_request(Enum):
+	START = 1
+	DISCONNECTION = 2
+
 
 class problem_socket:
+
 
     def __init__(self, max=0, file='', host="localhost", port=None):
         
@@ -26,6 +33,33 @@ class problem_socket:
 
         self.sock.bind((host, port))
     
+
+    def dockerService(self, usertoken, problem_name, request_type):
+
+    	usable_port = portfinder.findUsablePort()
+
+    	if usable_port == -1:
+    		print('[-] find usable port error : (problem_socket, dockerService)')
+    		exit()
+
+
+    	if request_type == problem_request.START.value:
+    		print('[+] docker run container : {}'.format(problem_name))
+    		docker_manage.run_container(usertoken, problem_name, usable_port)
+
+
+    	elif request_type == problem_request.DISCONNECTION.value:
+    		print('[+] docker stop container : {}'.format(problem_name))
+    		docker_manage.stop_container(usertoken)
+
+
+    	else:
+    		print('[-] request_type error : (problem_socket, dockerService)')
+
+
+    	return
+
+
     def receiveRequest(self, client_socket, addr):
 
     	print("[*] receiveRequest")
@@ -43,11 +77,16 @@ class problem_socket:
     	print("[*] problem_name : {}".format(problem_name))
     	print("[*] request_type : {}".format(request_type))
 
+    	self.dockerService(usertoken, problem_name, int(request_type))
+
     	client_socket.close()
 
     	return
 
+
     def waiting(self):
+
+    	docker_manage.build_images()
 
     	if self.sock == None:
     		print("[-] None sock error : (problem_socket, waiting)")
@@ -77,6 +116,7 @@ class problem_socket:
     def connect(self, host, port):
         self.sock.connect((host, port))
 
+
     def mysend(self, msg):
         totalsent = 0
         sent = self.sock.send(msg)
@@ -94,6 +134,7 @@ class problem_socket:
             chunks.append(chunk)
             bytes_recd = bytes_recd + len(chunk)
         return b''.join(chunks)
+
 
     def __del__(self):
     	if self.sock != None:

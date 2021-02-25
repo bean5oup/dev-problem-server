@@ -57,12 +57,12 @@ def findUsablePort():
                         pass
                 else:
                         localport = int(conn.laddr[1])
-                        personalPort[localport] = False
+                        usablePort[localport] = False
 
 
         print("[*] Using Port : ", end='')
-        for i in personalPort:
-                if personalPort[i] == True:
+        for i in usablePort:
+                if usablePort[i] == True:
                         
                         print(str(i))
                         
