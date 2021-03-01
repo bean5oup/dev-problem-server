@@ -10,11 +10,14 @@ problems.remove('')
 def build_images():	
 
 	if 'docker-compose.yml' in problems:
-		print('build using docker-compose.yml')
 		subprocess.run(['docker-compose build'], shell=True, cwd="./problems")
+		problems.remove('docker-compose.yml')
 	
-	else:	
-		for problem in problems:
+	for problem in problems:
+		check_yml = subprocess.check_output([f'ls ./problems/{problem}'], shell=True).decode().split('\n')
+		if 'docker-compose.yml' in check_yml:
+			subprocess.run(['docker-compose build'], shell=True, cwd=f'./problems/{problem}')
+		else:
 			client.images.build(path=f'./problems/{problem}', tag=f'{problem}', rm=True)	
 
 	for image in client.images.list():
