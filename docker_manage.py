@@ -43,14 +43,3 @@ def remove_container(user_token):
 		if container.name == user_token:
 			container.remove()
 
-
-#======test=======
-#build_images()
-#run_container(111, "pwn1", 12370)
-#run_container(222, "pwn1", 12371)
-#run_container(333, "web1", 12372)
-
-#stop_container('111')
-#stop_container('222')
-#stop_container('333')
-
