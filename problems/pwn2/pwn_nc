@@ -1,0 +1,12 @@
+service pwn_nc
+{
+    disable     = no
+    type        = UNLISTED
+    wait        = no
+    server      = /home/bean3oup/nc
+    socket_type = stream
+    protocol    = tcp
+    user        = bean3oup
+    port        = 8080
+    flags       = REUSE
+}
