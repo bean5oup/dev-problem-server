@@ -1,0 +1,7 @@
+version: '3.5'
+
+services:
+  pwn1:
+    image: pwn1
+    build: ./
+
