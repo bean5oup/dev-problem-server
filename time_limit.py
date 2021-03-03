@@ -18,6 +18,7 @@ def check_timelimit(usertoken, timelimit):
 			print("[*] Detecting disconnection during checking timelimit for {}".format(usertoken))
 			check_disconnection.pop(usertoken)
 			return
+		print("[*] time check : {}".format(usertoken))
 
 
 	docker_manage.stop_container(usertoken)
