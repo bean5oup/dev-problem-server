@@ -3,7 +3,9 @@ import portfinder
 import threading
 import docker_manage
 import portfinder
+import time_limit
 from enum import Enum
+
 
 class problem_request(Enum):
 	START = 1
@@ -13,7 +15,7 @@ class problem_request(Enum):
 class problem_socket:
 
 
-    def __init__(self, max=0, file='', host="localhost", port=None):
+    def __init__(self, max=0, host="localhost", port=None):
         
 
         if port is None:
@@ -26,7 +28,6 @@ class problem_socket:
         self.host = host
         self.port = port
         self.max = max
-        self.file = file
 
         print("[+] sock binding")
 
@@ -44,13 +45,23 @@ class problem_socket:
 
 
     	if request_type == problem_request.START.value:
+
     		print('[+] docker run container : {}'.format(problem_name))
     		docker_manage.run_container(usertoken, problem_name, usable_port)
 
+			time_limit.check_disconnection.update({usertoken : False})
+			t = threading.Thread(target=time_limit.check_timelimit, args=(usertoken,time_limit))
+			t.daemon = True
+			t.start()
+
 
     	elif request_type == problem_request.DISCONNECTION.value:
+
     		print('[+] docker stop container : {}'.format(problem_name))
     		docker_manage.stop_container(usertoken)
+
+    		time_limit.check_disconnection[usertoken] = True
+
 
 
     	else:
@@ -72,17 +83,25 @@ class problem_socket:
     	usertoken = msg.split(':')[0]
     	problem_name = msg.split(':')[1]
     	request_type = msg.split(':')[2]
+    	
+    	try: 
+    		time_limit = msg.split(':')[3]
+
+    	except IndexError:
+    		time_limit = -1 # No time limit
+
 
     	print("[*] usertoken : {}".format(usertoken))
     	print("[*] problem_name : {}".format(problem_name))
     	print("[*] request_type : {}".format(request_type))
+    	print("[*] time_limit : {}".format(time_limit))
 
     	self.dockerService(usertoken, problem_name, int(request_type))
+
 
     	client_socket.close()
 
     	return
-
 
     def waiting(self):
 
@@ -134,6 +153,9 @@ class problem_socket:
             chunks.append(chunk)
             bytes_recd = bytes_recd + len(chunk)
         return b''.join(chunks)
+
+
+
 
 
     def __del__(self):

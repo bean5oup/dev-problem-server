@@ -2,5 +2,10 @@
 
 ## Team
 
-- 강우선
-- 정다훈
+### 강우선
+
+- socket programming
+
+### 정다훈
+
+- docker managment
